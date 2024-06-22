@@ -134,7 +134,7 @@ const router = express.Router();
  *                 data:
  *                   $ref: '#/components/schemas/Attendance'
  *       400:
- *         description: Invalid data
+ *         description: Invalid data or attendance already marked for this date
  *         content:
  *           application/json:
  *             schema:
@@ -145,7 +145,7 @@ const router = express.Router();
  *                   example: 400
  *                 message:
  *                   type: string
- *                   example: Invalid data
+ *                   example: Invalid data or attendance already marked for this date
  *       500:
  *         description: Internal server error
  *         content:
