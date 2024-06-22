@@ -3,23 +3,31 @@ require("dotenv").config();
 
 const checkAdminStatus = async (authToken) => {
     const perusahaanServicesUrls = process.env.PERUSAHAAN_SERVICES_URLS.split(',');
-    const requests = perusahaanServicesUrls.map(url => axios.get(`${url}/api/v1/employee/profile`, {
-        headers: { Authorization: `Bearer ${authToken}` }
-    }));
+    const axiosConfig = {
+        headers: { Authorization: `Bearer ${authToken}` },
+        timeout: 5000 // 5 seconds timeout
+    };
 
     try {
-        const responses = await Promise.all(requests);
+        const requests = perusahaanServicesUrls.map(url =>
+            axios.get(`${url}/api/v1/employee/profile`, axiosConfig)
+        );
+        const responses = await Promise.allSettled(requests);
         for (const response of responses) {
-            const employee = response.data.data;
-            if (employee.isAdmin) {
-                return true;
+            if (response.status === 'fulfilled') {
+                const employee = response.value.data.data;
+                if (employee.isAdmin) {
+                    return true;
+                }
+            } else {
+                console.error(`Error fetching from ${response.reason.config.url}`);
             }
         }
-        return false;
     } catch (error) {
-        console.error('Error fetching admin status');
-        return false;
+        console.error(`Unexpected error:`, error.message);
     }
+
+    return false;
 };
 
 module.exports = checkAdminStatus;
