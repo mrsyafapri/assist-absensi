@@ -15,7 +15,8 @@ const port = process.env.PORT || 3005;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3005'];
+const perusahaanServicesUrls = process.env.PERUSAHAAN_SERVICES_URLS.split(',');
+const allowedOrigins = [...perusahaanServicesUrls, `http://localhost:${port}`];
 const corsOptions = {
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
