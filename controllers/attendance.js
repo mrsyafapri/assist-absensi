@@ -7,7 +7,7 @@ const markAttendance = async (req, res) => {
     const employeeId = req.employee.id;
 
     try {
-        const existingAttendance = await Attendance.findOne({ date });
+        const existingAttendance = await Attendance.findOne({ employee: employeeId, date });
         if (existingAttendance) {
             return responseError(res, 'Attendance already marked for this date', 400);
         }
