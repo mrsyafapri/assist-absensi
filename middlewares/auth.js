@@ -1,5 +1,6 @@
-require('dotenv').config();
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const { responseError } = require('../utils/responseHandler');
 
 const auth = (req, res, next) => {
