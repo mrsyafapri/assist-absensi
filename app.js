@@ -1,31 +1,46 @@
-require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config();
+
+const attendanceRoutes = require("./routes/attendance");
 
 const app = express();
 const router = express.Router();
-const port = process.env.PORT;
+const port = process.env.PORT || 3005;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
 
-const mongoString = process.env.DATABASE_URL
+const allowedOrigins = ['http://localhost:3000', 'hhttp://localhost:3001'];
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+};
+app.use(cors(corsOptions));
+
+const mongoString = process.env.DATABASE_URL;
 mongoose.connect(mongoString);
 
 const database = mongoose.connection;
 database.on("error", (error) => {
-    console.log(error)
-})
+    console.log(error);
+});
 database.once("connected", () => {
-    console.log("Database connected")
-})
+    console.log("Database connected");
+});
 
 router.get("/", (req, res) => {
     res.send("Welcome to the Absensi API");
 });
+
+router.use("/absensi", attendanceRoutes);
 
 app.use("/api/v1", router);
 app.listen(port, () => {
