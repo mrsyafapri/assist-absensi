@@ -73,7 +73,7 @@ const statusLeave = async (req, res) => {
         await leaveRequest.save();
         responseSuccess(res, leaveRequest, `Leave ${status} successfully`, 200);
     } catch (err) {
-        responseError(res, err.message, 500);
+        responseError(res, 'Internal server error', 500);
     }
 };
 
@@ -105,9 +105,9 @@ const generateReport = async (req, res) => {
 
         const leaveSummary = leaveRequests.reduce((acc, request) => {
             if (request.status === 'approved') acc.approved += 1;
-            if (['pending', 'rejected'].includes(request.status)) acc.notApproved += 1;
+            if (['pending', 'rejected'].includes(request.status)) acc.rejected += 1;
             return acc;
-        }, { approved: 0, notApproved: 0 });
+        }, { approved: 0, rejected: 0 });
 
         const report = {
             attendance: attendanceSummary,
