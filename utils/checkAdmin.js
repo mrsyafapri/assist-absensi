@@ -15,7 +15,7 @@ const checkAdminStatus = async (authToken) => {
                 return true;
             }
         } catch (error) {
-            console.error(`Error fetching from ${url}:`, error.message);
+            console.error(`Error fetching from ${url}`);
         }
     }
 
