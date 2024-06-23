@@ -145,7 +145,7 @@ const router = express.Router();
  *                   example: 400
  *                 message:
  *                   type: string
- *                   example: Invalid data or attendance already marked for this date
+ *                   example: Invalid data | Attendance already marked for this date
  *       500:
  *         description: Internal server error
  *         content:
@@ -185,6 +185,7 @@ router.post("/mark", auth, markAttendance);
  *                 format: date
  *               reason:
  *                 type: string
+ *                 example: "Liburan Keluarga"
  *     responses:
  *       201:
  *         description: Leave request submitted successfully
@@ -213,7 +214,7 @@ router.post("/mark", auth, markAttendance);
  *                   example: 400
  *                 message:
  *                   type: string
- *                   example: Invalid data or end date cannot be earlier than start date
+ *                   example: Invalid data | End date cannot be earlier than start date
  *       409:
  *         description: Leave request conflicts with an existing leave request
  *         content:
@@ -409,7 +410,7 @@ router.put("/leave/:id/status", auth, requireAdmin, statusLeave);
  *                   example: 400
  *                 message:
  *                   type: string
- *                   example: Invalid data or start date and end date are required
+ *                   example: Invalid data | Start date and end date are required
  *       500:
  *         description: Internal server error
  *         content:
