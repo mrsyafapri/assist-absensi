@@ -1,6 +1,15 @@
 # Absensi Service
 
-Absensi Service is an API for managing employee attendance and leave requests.
+Absensi Service is an API that allows for marking attendance, requesting leaves, and generating reports.
+
+## Features
+
+- Register and login employees
+- CRUD operations on employee profiles
+- Mark attendance
+- Request leaves
+- Approve or reject leave requests (admin only)
+- Generate attendance and leave reports
 
 ## Tech Stack
 
