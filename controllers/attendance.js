@@ -7,7 +7,7 @@ const markAttendance = async (req, res) => {
     const employeeId = req.employee.id;
 
     try {
-        const existingAttendance = await Attendance.findOne({ employee: employeeId, date });
+        const existingAttendance = await Attendance.exists({ employee: employeeId, date });
         if (existingAttendance) {
             return responseError(res, 'Attendance already marked for this date', 400);
         }
@@ -36,11 +36,10 @@ const requestLeave = async (req, res) => {
     }
 
     try {
-        const conflictingLeaveRequest = await LeaveRequest.findOne({
+        const conflictingLeaveRequest = await LeaveRequest.exists({
             employee: employeeId,
-            $or: [
-                { startDate: { $lte: end }, endDate: { $gte: start } }
-            ]
+            startDate: { $lte: end },
+            endDate: { $gte: start }
         });
 
         if (conflictingLeaveRequest) {
@@ -69,13 +68,10 @@ const statusLeave = async (req, res) => {
     }
 
     try {
-        const leaveRequest = await LeaveRequest.findById(id);
+        const leaveRequest = await LeaveRequest.findByIdAndUpdate(id, { status }, { new: true });
         if (!leaveRequest) {
             return responseError(res, 'Leave request not found', 404);
         }
-
-        leaveRequest.status = status;
-        await leaveRequest.save();
         responseSuccess(res, leaveRequest, `Leave ${status} successfully`, 200);
     } catch (err) {
         responseError(res, 'Internal server error', 500);
