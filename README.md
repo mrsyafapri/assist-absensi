@@ -4,8 +4,6 @@ Absensi Service is an API that allows for marking attendance, requesting leaves,
 
 ## Features
 
-- Register and login employees
-- CRUD operations on employee profiles
 - Mark attendance
 - Request leaves
 - Approve or reject leave requests (admin only)
@@ -62,76 +60,114 @@ Absensi Service is an API that allows for marking attendance, requesting leaves,
 
 ## API Endpoints
 
-### Authentication
-
-- **Middleware**: `auth` (for protected routes) and `requireAdmin` (for admin routes).
-
 ### Absensi
 
-- **Absensi untuk tiap pegawai**
+- **Endpoint:** `/api/v1/absensi/mark`
 
-  - **Requests**:
+  **Method:** `POST`
 
-  ```
-  POST /api/v1/absensi/mark
+  **Description:** Absensi untuk tiap pegawai
+
+  **Headers:**
+
+  - `Authorization: Bearer <token>`
+
+  **Request Body:**
+
+  ```json
   {
-      "date": "YYYY-MM-DD",
-      "status": "present" | "absent" | "late"
+    "date": "2024-06-23",
+    "status": "present"
   }
   ```
 
-  - **Responses**:
-    - `201`: Attendance marked successfully
-    - `400`: Invalid data
-    - `500`: Internal server error
+  **Responses:**
 
-### Izin cuti
+  - `201`: Attendance marked successfully.
+  - `400`: Invalid data or attendance already marked for this date.
+  - `500`: Internal server error.
 
-- **Izin cuti untuk tiap pegawai**
+### Izin Cuti
 
-  - **Requests**:
+- **Endpoint:** `/api/v1/absensi/leave`
 
-  ```
-  POST /api/v1/absensi/leave
+  **Method:** `POST`
+
+  **Description:** Izin cuti untuk tiap pegawai
+
+  **Headers:**
+
+  - `Authorization: Bearer <token>`
+
+  **Request Body:**
+
+  ```json
   {
-      "startDate": "YYYY-MM-DD",
-      "endDate": "YYYY-MM-DD",
-      "reason": "Reason for leave"
+    "startDate": "2024-06-23",
+    "endDate": "2024-06-25",
+    "reason": "Family vacation"
   }
   ```
 
-  - **Responses**:
-    - `201`: Leave request submitted successfully
-    - `400`: Invalid data or end date cannot be earlier than start date
-    - `409`: Leave request conflicts with an existing leave request
-    - `500`: Internal server error
+  **Responses:**
 
-- **Approval izin cuti pegawai oleh admin**
-  - **Requests**:
-  ```
-  PUT /api/v1/absensi/leave/{id}/status
+  - `201`: Leave request submitted successfully.
+  - `400`: Invalid data or end date cannot be earlier than start date.
+  - `409`: Leave request conflicts with an existing leave request.
+  - `500`: Internal server error.
+
+- **Endpoint:** `/api/v1/absensi/leave/{id}/status`
+
+  **Method:** `PUT`
+
+  **Description:** Approval izin cuti pegawai oleh admin
+
+  **Headers:**
+
+  - `Authorization: Bearer <token>`
+
+  **Parameters:**
+
+  - `id` (path): Leave request ID.
+
+  **Request Body:**
+
+  ```json
   {
-    "status": "approved" | "rejected"
+    "status": "approved"
   }
   ```
-  - **Responses**:
-    - `200`: Leave request status updated successfully
-    - `400`: Invalid status
-    - `403`: Unauthorized: Only admins can update leave status
-    - `404`: Leave request not found
-    - `500`: Internal server error
+
+  **Responses:**
+
+  - `200`: Leave request status updated successfully.
+  - `400`: Invalid status.
+  - `403`: Unauthorized - Only admin can perform this action.
+  - `404`: Leave request not found.
+  - `500`: Internal server error.
 
 ### Laporan
 
-- **Laporan absen dan izin cuti tiap pegawai dalam waktu tertentu**
-  - **Requests**:
-  ```
-  GET /api/v1/absensi/report?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
-  ```
-  - **Responses**:
-    - `200`: Report generated successfully
-    - `400`: Start date and end date are required
-    - `500`: Internal server error
+- **Endpoint:** `/api/v1/absensi/report?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD`
+
+  **Method:** `GET`
+
+  **Description:** Laporan absen dan izin cuti tiap pegawai dalam waktu tertentu
+
+  **Headers:**
+
+  - `Authorization: Bearer <token>`
+
+  **Query Parameters:**
+
+  - `startDate` (query): Start date for the report (format: `YYYY-MM-DD`).
+  - `endDate` (query): End date for the report (format: `YYYY-MM-DD`).
+
+  **Responses:**
+
+  - `200`: Report generated successfully.
+  - `400`: Invalid data or start date and end date are required.
+  - `500`: Internal server error.
 
 ## Configuration
 
