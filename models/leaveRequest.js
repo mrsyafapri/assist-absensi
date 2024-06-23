@@ -31,4 +31,7 @@ const leaveRequestSchema = new mongoose.Schema({
     timestamps: true
 });
 
+// Create compound index for efficient queries
+leaveRequestSchema.index({ employee: 1, startDate: 1, endDate: 1 });
+
 module.exports = mongoose.model('LeaveRequest', leaveRequestSchema);
